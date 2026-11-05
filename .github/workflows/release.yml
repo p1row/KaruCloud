@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Publish (small, needs .NET 8 Desktop Runtime)
+        run: dotnet publish KaruCloud.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:PublishReadyToRun=true -o dist
+      - name: Publish (self-contained)
+        run: dotnet publish KaruCloud.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -o dist-sc
+      - name: Rename self-contained build
+        shell: pwsh
+        run: Move-Item dist-sc/KaruCloud.exe dist/KaruCloud-selfcontained.exe
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/KaruCloud.exe
+            dist/KaruCloud-selfcontained.exe
