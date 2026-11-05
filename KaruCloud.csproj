@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>KaruCloud</AssemblyName>
+    <RootNamespace>KaruCloud</RootNamespace>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Product>KaruCloud</Product>
+    <Version>1.6.5</Version>
+    <StartupObject>KaruCloud.Program</StartupObject>
+
+    <!-- Keep the process small: no server GC, no background GC thread, no PGO.
+         Invariant mode must stay OFF: with it, WPF text boxes crash (CultureNotFoundException 1041) as soon as a Japanese / IME keyboard is active.
+         NLS (the built-in Windows culture data) is used instead of ICU so memory stays low. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <ServerGarbageCollector>false</ServerGarbageCollector>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredPGO>false</TieredPGO>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>none</DebugType>
+    <!-- WebView2Loader.dll goes inside the single exe instead of sitting next to it. -->
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
+    <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+    <!-- Only used by the sign-in window (SoundCloud's own login / sign-up page). Closed again right after login. -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2739.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.Globalization.UseNls" Value="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="icon.ico" LogicalName="icon.ico" />
+  </ItemGroup>
+
+</Project>
